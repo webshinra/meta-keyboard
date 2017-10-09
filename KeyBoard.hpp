@@ -8,6 +8,13 @@ template <typename KeyboardType>
 struct KeyBoard:
   SemanticKeyCode
 {
+  virtual
+  ~KeyBoard ()
+  {
+    for (auto &matrix:m_matrix)
+      delete matrix;
+  }
+  
   void
   update ()
   {

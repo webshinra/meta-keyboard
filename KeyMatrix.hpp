@@ -14,6 +14,12 @@ struct KeyMatrix:
              int8_t const rows[rows_size]):
     m_switchs (columns, rows)
   { }
+
+  ~KeyMatrix ()
+  {
+    for(auto &layer:m_layers)
+      delete layer;
+  }
   
   std::list<SemanticKeyCode>
   update ()
@@ -22,13 +28,17 @@ struct KeyMatrix:
     std::list<SemanticKeyCode> l;
     for(auto &event:state)
       {
-        // ici j'applique la keymap
-        l.push_back({event.event_type,
-                     keymap_bepo_l[event.code.col][event.code.row]});
+        // ici j'applique la keymap en 0, on fera mieux plus tard.
+        l.push_back(m_layers[0]->map(event));
       }
     return l;
-  }
+             }
 
+  void
+  add_layer (KeyLayer *layer)
+  { m_layers.push_back(layer); }
+  
 private:
   SwitchMatrix<columns_size, rows_size, rows_write> m_switchs;
-  };
+  std::vector<KeyLayer*> m_layers;
+};

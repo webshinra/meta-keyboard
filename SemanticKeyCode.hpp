@@ -1,10 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <KeyEvent.hpp>
 
 using KeyId = unsigned int;
+using KeyMap =  std::vector<std::vector<KeyId>>;
 
 struct
 SemanticKeyCode
