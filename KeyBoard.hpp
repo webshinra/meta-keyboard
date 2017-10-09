@@ -22,10 +22,10 @@ struct KeyBoard:
       switch (key.event_type)
         {
         case KeyEvent::key_pressed:
-          Keyboard.press(key.code);
+          //Keyboard.press(key.code);
           break;
         case KeyEvent::key_released:
-          Keyboard.release(key.code);
+          //Keyboard.release(key.code);
           break;
         };
     
