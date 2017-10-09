@@ -4,11 +4,13 @@
 
 #include <KeyEvent.hpp>
 
+using KeyId = int;
+
 struct
 SemanticKeyCode
 {
   KeyEvent event_type;
-  int code;
+  KeyId code;
 
   bool
   operator!= (SemanticKeyCode c)

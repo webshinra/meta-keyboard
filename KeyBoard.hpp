@@ -4,6 +4,7 @@
 #include <SensorMatrix.hpp>
 #include <SemanticKeyCode.hpp>
 
+template <typename KeyboardType>
 struct KeyBoard:
   SemanticKeyCode
 {
@@ -22,10 +23,10 @@ struct KeyBoard:
       switch (key.event_type)
         {
         case KeyEvent::key_pressed:
-          //Keyboard.press(key.code);
+          m_kb.press(key.code);
           break;
         case KeyEvent::key_released:
-          //Keyboard.release(key.code);
+          m_kb.release(key.code);
           break;
         };
     
@@ -37,6 +38,8 @@ struct KeyBoard:
   {
     m_matrix.push_back(sensors);
   }
+
+  KeyboardType m_kb;
   
   std::list<SemanticKeyCode> m_buffer;
   std::list<SensorMatrix*> m_matrix;
