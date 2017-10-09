@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SwitchMatrix.hpp>
-#include <keymap.hpp>
 
 // A key matrix is the association between an active Layer and an
 // HardwareKeycode.

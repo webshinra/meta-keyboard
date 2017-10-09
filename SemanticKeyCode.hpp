@@ -4,7 +4,7 @@
 
 #include <KeyEvent.hpp>
 
-using KeyId = int;
+using KeyId = unsigned int;
 
 struct
 SemanticKeyCode

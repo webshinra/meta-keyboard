@@ -6,14 +6,14 @@ struct
 USB_Keyboard
 {
   void
-  press (KeyId)
+  press (KeyId const& k)
   {
-    Keboard.press(KeyId);
+    Keyboard.press(k);
   }
   
   void
-  release (KeyId)
+  release (KeyId const& k)
   {
-    Keboard.release(KeyId);
+    Keyboard.release(k);
   }
 };
