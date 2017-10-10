@@ -42,9 +42,7 @@ struct KeyBoard:
 
   void
   add_matrix (SensorMatrix* sensors)
-  {
-    m_matrix.push_back(sensors);
-  }
+  { m_matrix.push_back(sensors); }
 
   KeyboardType m_kb;
   

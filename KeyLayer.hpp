@@ -12,7 +12,7 @@ struct KeyLayer
   
   SemanticKeyCode
   map (HardwareKeyCode const& e) const
-  { return {e.event_type, m_keymap[e.code.col][e.code.row]}; }
+  { return {e.event_type, m_keymap[e.code.probe][e.code.sensor]}; }
 
 private:
   KeyMap const& m_keymap;

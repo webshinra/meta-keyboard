@@ -2,16 +2,16 @@
 
 struct V2d
 {
-  int8_t col;
-  int8_t row;
+  int8_t probe;
+  int8_t sensor;
 
   bool
   operator<(V2d const& o) const
   {
-    if(col == o.col)
-      return (row < o.row);
+    if(probe == o.probe)
+      return (sensor < o.sensor);
     else
-      return (col < o.col);
+      return (probe < o.probe);
   }
   
 };

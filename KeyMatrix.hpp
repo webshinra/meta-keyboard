@@ -4,15 +4,14 @@
 
 // A key matrix is the association between an active Layer and an
 // HardwareKeycode.
-template <int8_t columns_size,
-          int8_t rows_size,
-          bool rows_write>
+template <int8_t sensors_num,
+          int8_t probes_num>
 struct KeyMatrix:
   public SensorMatrix
 {
-  KeyMatrix (int8_t const columns[columns_size],
-             int8_t const rows[rows_size]):
-    m_switchs (columns, rows)
+  KeyMatrix (etl::array<int8_t, sensors_num> const& sensors,
+             etl::array<int8_t, probes_num> const& probes):
+    m_switchs (sensors, probes)
   { }
 
   ~KeyMatrix ()
@@ -32,13 +31,13 @@ struct KeyMatrix:
         l.push_back(m_layers[0]->map(event));
       }
     return l;
-             }
+  }
 
   void
   add_layer (KeyLayer *layer)
   { m_layers.push_back(layer); }
   
 private:
-  SwitchMatrix<columns_size, rows_size, rows_write> m_switchs;
+  SwitchMatrix<sensors_num, probes_num> m_switchs;
   std::vector<KeyLayer*> m_layers;
 };
