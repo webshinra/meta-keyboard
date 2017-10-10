@@ -1,3 +1,3 @@
 #pragma once
 
-enum  KeyEvent { key_pressed, key_released };
+enum class KeyEvent {no_event, key_pressed, key_released };

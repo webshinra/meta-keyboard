@@ -2,8 +2,8 @@
 
 struct V2d
 {
-  int8_t probe;
-  int8_t sensor;
+  uint8_t probe;
+  uint8_t sensor;
 
   bool
   operator<(V2d const& o) const
@@ -13,5 +13,4 @@ struct V2d
     else
       return (probe < o.probe);
   }
-  
 };

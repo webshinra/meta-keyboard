@@ -1,26 +1,31 @@
 #pragma once
 
 #include <SemanticKeyCode.hpp>
-int8_t key_interaction_buffer = -1;
-int8_t key_char_buffer;
 
 // horrible.
 struct
 I2C_Slave
 {
   void
+  send_key(KeyId id,KeyEvent e)
+  {
+    if(g_key_buffer.size() < KEY_EVENT_BUFFER_LIMIT)
+      g_key_buffer.push_back({e, id});
+  }
+  
+  void
   press (KeyId id)
   {
-    key_interaction_buffer = (int8_t)KeyEvent::key_pressed;
-    key_char_buffer = 'i';
-    Serial.println("pressed!");
+    send_key(id, KeyEvent::key_pressed);
+    if (SERIAL_DEBUG)
+      Serial.println("pressed!");
   }
   
   void
   release (KeyId id)
   {
-    key_interaction_buffer = KeyEvent::key_released;
-    key_char_buffer = 'i';
-    Serial.println("released!");
+    send_key(id, KeyEvent::key_released);
+    if (SERIAL_DEBUG)
+      Serial.println("released!");
   }
 };

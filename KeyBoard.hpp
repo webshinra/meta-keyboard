@@ -35,6 +35,8 @@ struct KeyBoard:
         case KeyEvent::key_released:
           m_kb.release(key.code);
           break;
+        case KeyEvent::no_event:
+          break;
         };
     
     m_buffer.clear();

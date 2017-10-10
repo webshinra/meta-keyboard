@@ -20,21 +20,22 @@ struct I2C_Matrix:
   update () override
   {
     std::list<SemanticKeyCode> l;
-    if(!(subclock % DEBOUNCE_AVERAGE))
+    //     if(!(subclock % DEBOUNCE_AVERAGE))
+    // {
+    Wire.requestFrom(t_slave_adress, 2);
+    if(Wire.available() == 2)
       {
-        Wire.requestFrom(t_slave_adress, 2);
-        if(Wire.available() == 2)
+        uint8_t buffer[2];
+        buffer[0] = Wire.read();
+        buffer[1] = Wire.read();
+
+        if(buffer[0] != (int)(KeyEvent::no_event))
           {
-            bool key_pressed = Wire.read(); // What kind?
-            char keystroke = Wire.read(); // Which key?
-    
-            l.push_back(SemanticKeyCode{ (key_pressed
-                                          ? KeyEvent::key_pressed
-                                          : KeyEvent::key_released),
-                                         keystroke });
+            l.push_back
+              (SemanticKeyCode{static_cast<KeyEvent>(buffer[0]),
+                               static_cast<KeyId>(buffer[1])});
           }
       }
-    subclock++;
     return l;
   }
 

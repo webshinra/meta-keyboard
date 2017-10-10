@@ -30,10 +30,12 @@ struct SwitchMatrix
         pinMode(s, INPUT_PULLUP);
       }
     
-    for (auto prob_i=0; prob_i < probes.size(); ++prob_i)      
-      for (auto sensor_i=0; sensor_i < probes.size(); ++sensor_i) 
+    for (uint8_t prob_i=0; prob_i < probes.size(); ++prob_i)      
+      for (uint8_t sensor_i=0; sensor_i < sensors.size(); ++sensor_i) 
         {
-          m_state[sensor_i][prob_i] = 0;
+          // Initialising the state matrix with a «key released»
+          // state, to avoid massive release on boot.
+          m_state[sensor_i][prob_i] = -(DEBOUNCE_AVERAGE*2);
         }
 
     /// Light on the "on board" diode.
@@ -52,58 +54,69 @@ private:
   etl::array<int8_t, probes_num> const m_probes;
   etl::array<etl::array<int8_t, probes_num>,
              sensors_num> m_state;
-
-  void
-  scan_key (V3d adress)
-  {
-  }
   
   std::list<HardwareKeyCode>
   scan_matrix ()
   {
     std::list<HardwareKeyCode> l;
     
-    for (int8_t prob_i=0; prob_i < m_probes.size(); ++prob_i) 
+    for (uint8_t prob_i=0;
+         prob_i < m_probes.size();
+         ++ prob_i) 
       {
         digitalWrite(m_probes[prob_i], LOW);
         
-        for (int8_t sensor_i=0; sensor_i < m_sensors.size(); ++sensor_i) 
+        for (uint8_t sensor_i=0;
+             sensor_i < m_sensors.size();
+             ++ sensor_i) 
           {
             bool key_pressed = (digitalRead(m_sensors[sensor_i]) == LOW);
-
-            Serial.print(digitalRead(m_sensors[sensor_i]));
-            Serial.print(" ");
-            delay(100);
             
             int8_t &current_state = m_state[sensor_i][prob_i];
+
+            if (SERIAL_DEBUG)
+              {
+                Serial.print(current_state);
+                Serial.print("\t");
+              }
             
             if(!key_pressed && current_state == -DEBOUNCE_AVERAGE)
-                    { 
-                
-                      l.push_back(HardwareKeyCode{KeyEvent::key_released,
-                                                  {sensor_i, prob_i}});
-                    }
+              { 
+                if(l.size() < KEY_EVENT_BUFFER_LIMIT)
+                  l.push_back(HardwareKeyCode{KeyEvent::key_released,
+                                              {sensor_i, prob_i}});
+              }
             else if(key_pressed && current_state == DEBOUNCE_AVERAGE)
               {
-                l.push_back(HardwareKeyCode{KeyEvent::key_pressed,
-                                            {sensor_i, prob_i}});
+                if(l.size() < KEY_EVENT_BUFFER_LIMIT)
+                  l.push_back(HardwareKeyCode{KeyEvent::key_pressed,
+                                              {sensor_i, prob_i}});
               }
 
-            static_assert((DEBOUNCE_AVERAGE <= 100),
-                          "Due to the switch matriprob_i debouncer"
+            static_assert((DEBOUNCE_AVERAGE <= 60),
+                          "Due to the switch matrix debouncer"
                           " representation in memory, the debounce"
-                          " average cannot be > 100.");
+                          " average cannot be > 60.");
             
-            if(key_pressed && (current_state <= 100) )
+            if(key_pressed && (current_state <= (DEBOUNCE_AVERAGE * 2)) )
               ++ current_state;
 
-            if(!key_pressed && (current_state >= -100) )
+            if(!key_pressed && (current_state >= -(DEBOUNCE_AVERAGE * 2)) )
               -- current_state;
           }
-        //Serial.println();
+        if (SERIAL_DEBUG)
+          {
+            Serial.println();
+          }
+        
         digitalWrite(m_probes[prob_i], HIGH);
       }
-    //Serial.println("");
+    if (SERIAL_DEBUG)
+      {
+        Serial.println("");
+        delay(100);
+      }
+    
     return l;
   }
 };
