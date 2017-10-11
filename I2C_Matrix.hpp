@@ -9,19 +9,19 @@ struct I2C_Matrix:
   public SensorMatrix
 {
   I2C_Matrix(bool do_init=true):
-    subclock(0)
+    m_subclock(0)
   {
     if (do_init)
       Wire.begin(t_this_adress);
   }
   
   virtual
-  std::list<SemanticKeyCode>
+  KeyQueue
   update () override
   {
-    std::list<SemanticKeyCode> l;
-    //     if(!(subclock % DEBOUNCE_AVERAGE))
-    // {
+    KeyQueue l;
+    //    if((m_subclock++ % 50) == 0)
+    //     {
     Wire.requestFrom(t_slave_adress, 2);
     if(Wire.available() == 2)
       {
@@ -35,10 +35,12 @@ struct I2C_Matrix:
               (SemanticKeyCode{static_cast<KeyEvent>(buffer[0]),
                                static_cast<KeyId>(buffer[1])});
           }
+        //         }
       }
+         
     return l;
   }
 
 private:
-  unsigned subclock;
+  int m_subclock;
 };

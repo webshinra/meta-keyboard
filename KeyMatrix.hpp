@@ -20,11 +20,11 @@ struct KeyMatrix:
       delete layer;
   }
   
-  std::list<SemanticKeyCode>
+  KeyQueue
   update ()
   {
-    std::list<HardwareKeyCode> state = m_switchs.update();
-    std::list<SemanticKeyCode> l;
+    HW_KeyQueue state = m_switchs.update();
+    KeyQueue l;
     for(auto &event:state)
       {
         // ici j'applique la keymap en 0, on fera mieux plus tard.
@@ -39,5 +39,5 @@ struct KeyMatrix:
   
 private:
   SwitchMatrix<sensors_num, probes_num> m_switchs;
-  std::vector<KeyLayer*> m_layers;
+  etl::deque<KeyLayer*, 1> m_layers;
 };

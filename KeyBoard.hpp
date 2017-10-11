@@ -5,8 +5,7 @@
 #include <SemanticKeyCode.hpp>
 
 template <typename KeyboardType>
-struct KeyBoard:
-  SemanticKeyCode
+struct KeyBoard
 {
   virtual
   ~KeyBoard ()
@@ -20,7 +19,8 @@ struct KeyBoard:
   {
     for (auto &m:m_matrix)
       for (auto &event:m->update())
-        m_buffer.push_back(event);
+        if(m_buffer.size() < KEY_EVENT_BUFFER_LIMIT)
+          m_buffer.push_back(event);
   }
 
   void
@@ -48,6 +48,6 @@ struct KeyBoard:
 
   KeyboardType m_kb;
   
-  std::list<SemanticKeyCode> m_buffer;
-  std::list<SensorMatrix*> m_matrix;
+  KeyQueue m_buffer;
+  etl::deque<SensorMatrix*, SENSOR_MATRIX_LIMIT> m_matrix;
 };

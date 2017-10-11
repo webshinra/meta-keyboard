@@ -37,13 +37,9 @@ struct SwitchMatrix
           // state, to avoid massive release on boot.
           m_state[sensor_i][prob_i] = -(DEBOUNCE_AVERAGE*2);
         }
-
-    /// Light on the "on board" diode.
-    /*    pinMode(6, OUTPUT);
-          digitalWrite(6, 1);*/
   }
 
-  std::list<HardwareKeyCode>
+  HW_KeyQueue
   update ()
   {
     return scan_matrix();
@@ -55,10 +51,10 @@ private:
   etl::array<etl::array<int8_t, probes_num>,
              sensors_num> m_state;
   
-  std::list<HardwareKeyCode>
+  HW_KeyQueue
   scan_matrix ()
   {
-    std::list<HardwareKeyCode> l;
+    HW_KeyQueue l;
     
     for (uint8_t prob_i=0;
          prob_i < m_probes.size();
@@ -114,7 +110,7 @@ private:
     if (SERIAL_DEBUG)
       {
         Serial.println("");
-        delay(100);
+        //oodelay(100);
       }
     
     return l;

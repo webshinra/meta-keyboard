@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 #include <KeyEvent.hpp>
 
 using KeyId = unsigned int;
