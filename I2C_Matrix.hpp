@@ -25,19 +25,20 @@ struct I2C_Matrix:
     if(Serial1.available() == 3)
       {
         digitalWrite(6, 1);
-        uint8_t buffer[3];
-        buffer[0] = Serial1.read();
-        buffer[1] = Serial1.read();
-        buffer[2] = Serial1.read();
+        uint8_t event = Serial1.read();
+
+        KeyId k;
+        k.bytes[0] = Serial1.read();
+        k.bytes[1] = Serial1.read();
         
-        if(buffer[0] != (int)(KeyEvent::no_event))
+        if(event != (int)(KeyEvent::no_event))
           {
             l.push_back
               (SemanticKeyCode
-                  {static_cast<KeyEvent>(buffer[0]),
-                   static_cast<KeyId>(((KeyId)buffer[2] << 8))});
+                  {static_cast<KeyEvent>(event),
+                   k.code});
           }
-      }
+          }
          
     return l;
   }
