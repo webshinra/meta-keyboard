@@ -6,6 +6,11 @@
 struct
 I2C_Slave
 {
+  I2C_Slave()
+  {
+    Serial.begin(9600);
+  }
+  
   void
   send_key(KeyId id,KeyEvent e)
   {

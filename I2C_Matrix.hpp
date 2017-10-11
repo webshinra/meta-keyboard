@@ -8,11 +8,13 @@ template <int8_t t_slave_adress,
 struct I2C_Matrix:
   public SensorMatrix
 {
-  I2C_Matrix(bool do_init=true):
-    m_subclock(0)
+  I2C_Matrix(bool do_init=true)
   {
     if (do_init)
-      Wire.begin(t_this_adress);
+      {
+        Serial.begin(9600);
+      }
+    
   }
   
   virtual
@@ -20,27 +22,23 @@ struct I2C_Matrix:
   update () override
   {
     KeyQueue l;
-    //    if((m_subclock++ % 50) == 0)
-    //     {
-    Wire.requestFrom(t_slave_adress, 2);
-    if(Wire.available() == 2)
+    if(Serial1.available() == 3)
       {
-        uint8_t buffer[2];
-        buffer[0] = Wire.read();
-        buffer[1] = Wire.read();
-
+        digitalWrite(6, 1);
+        uint8_t buffer[3];
+        buffer[0] = Serial1.read();
+        buffer[1] = Serial1.read();
+        buffer[2] = Serial1.read();
+        
         if(buffer[0] != (int)(KeyEvent::no_event))
           {
             l.push_back
-              (SemanticKeyCode{static_cast<KeyEvent>(buffer[0]),
-                               static_cast<KeyId>(buffer[1])});
+              (SemanticKeyCode
+                  {static_cast<KeyEvent>(buffer[0]),
+                   static_cast<KeyId>(((KeyId)buffer[2] << 8))});
           }
-        //         }
       }
          
     return l;
   }
-
-private:
-  int m_subclock;
 };

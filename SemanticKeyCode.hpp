@@ -2,19 +2,26 @@
 
 #include <KeyEvent.hpp>
 
-using KeyId = unsigned int;
+//using KeyId = unsigned int;
 
-struct
-SemanticKeyCode
+union KeyId
 {
-  KeyEvent event_type;
-  KeyId code;
+  unsigned int code;
+  unsigned char bytes[2];
+}
 
-  bool
-  operator!= (SemanticKeyCode c)
+  struct
+  SemanticKeyCode
   {
-    return (this->code != c.code
-            or
-            this->event_type != c.event_type);
-  }
-};
+    KeyEvent event_type;
+
+    KeyId code;
+
+    bool
+    operator!= (SemanticKeyCode c)
+    {
+      return (this->code != c.code
+              or
+              this->event_type != c.event_type);
+    }
+  };
