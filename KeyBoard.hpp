@@ -46,6 +46,18 @@ struct KeyBoard
   add_matrix (SensorMatrix* sensors)
   { m_matrix.push_back(sensors); }
 
+  uint8_t
+  nb_press ()
+  {
+    uint8_t count = 0;
+    
+    for (auto const &buff:m_buffer)
+      if (buff.event_type == KeyEvent::key_pressed)
+        ++ count;
+    
+    return count;
+  }
+  
   KeyboardType m_kb;
   
   KeyQueue m_buffer;
