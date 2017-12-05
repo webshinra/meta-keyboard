@@ -8,6 +8,12 @@ union KeyId
 {
   unsigned int code;
   unsigned char bytes[2];
+
+  bool
+  operator< (KeyId const& i) const
+  {
+    return (code < i.code);
+  }
 };
 
 

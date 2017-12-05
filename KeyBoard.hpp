@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <list>
 #include <SensorMatrix.hpp>
 #include <SemanticKeyCode.hpp>
@@ -7,6 +8,25 @@
 template <typename KeyboardType>
 struct KeyBoard
 {
+  KeyBoard()
+  {
+    
+    m_exclusion.insert({KEY_MENU});
+    m_exclusion.insert({MODIFIERKEY_GUI});
+    m_exclusion.insert({KEY_RIGHT_ALT});
+    m_exclusion.insert({KEY_LEFT_SHIFT});
+    m_exclusion.insert({KEY_RIGHT_ARROW});
+    m_exclusion.insert({KEY_LEFT_ARROW});
+
+
+    
+    m_exclusion.insert({KEY_LEFT_ALT});
+    m_exclusion.insert({KEY_LEFT_CTRL});
+    m_exclusion.insert({KEY_UP_ARROW});
+    m_exclusion.insert({KEY_DOWN_ARROW});
+    m_exclusion.insert({KEY_ESC});
+  }
+  
   virtual
   ~KeyBoard ()
   {
@@ -50,9 +70,11 @@ struct KeyBoard
   nb_press ()
   {
     uint8_t count = 0;
-    
+
     for (auto const &buff:m_buffer)
-      if (buff.event_type == KeyEvent::key_pressed)
+      if ((buff.event_type == KeyEvent::key_pressed)
+          and
+          (!m_exclusion.count(buff.code)))
         ++ count;
     
     return count;
@@ -61,5 +83,7 @@ struct KeyBoard
   KeyboardType m_kb;
   
   KeyQueue m_buffer;
+  
+  std::set<KeyId> m_exclusion;
   etl::deque<SensorMatrix*, SENSOR_MATRIX_LIMIT> m_matrix;
 };
