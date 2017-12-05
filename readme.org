@@ -1,0 +1,4 @@
+* Meta-Keyboard
+
+A still rought unfinished (but working well)
+library to describe and compose keyboards.
